@@ -35,10 +35,10 @@ You can share this with your friends.
 
 ## ⚠️ Important: API Key
 The app uses the Anthropic API which is accessed via Claude.ai's artifact renderer.
-For a standalone website you'll need your own Anthropic API key.
+For a standalone website you'll need your own Gemini API key.
 
 ### Getting an API key:
-1. Go to https://console.anthropic.com
+1. Go to https://aistudio.google.com
 2. Sign up for a free account
 3. Go to "API Keys" and create a new key
 4. In `src/App.jsx`, find this line:
@@ -58,8 +58,8 @@ For a standalone website you'll need your own Anthropic API key.
 ### Keep your key safe:
 Instead of putting the key directly in the code, use a Vercel environment variable:
 1. In Vercel dashboard → your project → Settings → Environment Variables
-2. Add: `VITE_ANTHROPIC_KEY` = your API key
-3. In App.jsx use: `import.meta.env.VITE_ANTHROPIC_KEY`
+2. Add: `VITE_GEMINI_KEY` = your API key
+3. In App.jsx use: `import.meta.env.VITE_GEMINI_KEY`
 
 ---
 
