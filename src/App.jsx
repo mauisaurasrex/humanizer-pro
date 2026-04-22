@@ -329,19 +329,15 @@ export default function HumanizerPro() {
   })() : 0;
 
   async function callClaude(prompt) {
-    const apiKey = (typeof import !== "undefined" && import.meta?.env?.VITE_ANTHROPIC_KEY) || "";
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "anthropic-version":"2023-06-01",
-        "anthropic-dangerous-direct-browser-access":"true",
-        ...(apiKey ? {"x-api-key": apiKey} : {})
-      },
+    const apiKey = import.meta?.env?.VITE_GEMINI_KEY || "";
+    if (!apiKey) throw new Error("No API key found. Add VITE_GEMINI_KEY to your Vercel environment variables.");
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model:"claude-sonnet-4-6",
-        max_tokens:1200,
-        messages:[{ role:"user", content:prompt }]
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 1200, temperature: 0.9 }
       })
     });
     if (!res.ok) {
@@ -349,8 +345,8 @@ export default function HumanizerPro() {
       throw new Error(err?.error?.message || `HTTP ${res.status}`);
     }
     const data = await res.json();
-    const result = data?.content?.[0]?.text?.trim();
-    if (!result) throw new Error("Empty response");
+    const result = data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if (!result) throw new Error("Empty response from Gemini");
     return result;
   }
 
